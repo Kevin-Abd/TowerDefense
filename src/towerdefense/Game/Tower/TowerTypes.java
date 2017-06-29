@@ -12,8 +12,10 @@ package towerdefense.Game.Tower;
 public enum TowerTypes
 {
 	NULL("N/A",0,0,1,0),
-	TEST("test",0,100,1,1),
-	CLASS0("class 0",5,60,1000,10);
+	TEST("test",0,100,500,1000),
+	CLASS0("basic",			5,60,	1000,	10),
+	CLASS1("machine gun",	10,40,	300,	6),
+	CLASS2("sniper",		30,110,	2000,	40);
 	private final String name;
 	private final int value;
 	/**

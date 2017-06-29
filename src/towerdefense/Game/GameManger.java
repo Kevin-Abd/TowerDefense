@@ -151,10 +151,7 @@ public class GameManger
 	{
 		//TODO
 		double x1, y1, x2, y2;
-		gc.setGlobalAlpha(1);
-		gc.setFill(Color.WHITE);
-		gc.fillRect(xOffset, yOffset, gc.getCanvas().getWidth(),
-				gc.getCanvas().getHeight());
+		
 
 		gc.setStroke(Color.BURLYWOOD);
 		gc.setGlobalAlpha(.4);

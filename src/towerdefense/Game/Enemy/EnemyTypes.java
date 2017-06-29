@@ -16,7 +16,9 @@ public enum EnemyTypes
 
 	NULL("N/A", 0, Vector.getVectorZero(), 0),
 	TEST("test", 1, Vector.getVectorZero(), 0),
-	CLASS0("class 0", 55, new Vector(40, 0), 10);
+	CLASS0("basic",		55, new Vector(40, 0), 10),
+	CLASS1("runner",	17, new Vector(90, 0), 6),
+	CLASS2("heavy",		120, new Vector(20, 0), 20);
 	private final String name;
 	private final double hitPoint;
 	/**

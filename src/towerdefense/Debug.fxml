@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.canvas.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,8 +8,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="350.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="towerdefense.Debug">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Canvas fx:id="can" height="330.0" layoutX="10.0" layoutY="10.0" width="380.0" />
+      <Canvas fx:id="FieldCanvas" height="300.0" style="-fx-opacity: .5; -fx-blend-mode: 2;" width="650.0" StackPane.alignment="TOP_CENTER">
+         <StackPane.margin>
+            <Insets top="20.0" />
+         </StackPane.margin>
+      </Canvas>
+      <Canvas fx:id="ShopCanvas" height="150.0" width="650.0" StackPane.alignment="BOTTOM_CENTER">
+         <StackPane.margin>
+            <Insets bottom="15.0" />
+         </StackPane.margin>
+      </Canvas>
    </children>
-</AnchorPane>
+</StackPane>
