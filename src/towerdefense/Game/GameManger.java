@@ -8,6 +8,7 @@ package towerdefense.Game;
 import java.util.Arrays;
 import java.util.LinkedList;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import towerdefense.Game.Enemy.Enemy;
 import towerdefense.Game.Enemy.EnemyManager;
 import towerdefense.Game.Path.Path;
@@ -28,8 +29,14 @@ public class GameManger
 	private LinkedList<Tower> towers;
 	private LinkedList<GameEvent> events;
 	private Path path;
-	private final double staticT;
+	private double staticT;
 
+	public GameManger(double dt)
+	{
+		this();
+		staticT = dt;
+	}
+	
 	public GameManger()
 	{
 		//TEMP 
@@ -140,7 +147,54 @@ public class GameManger
 			GraphicsContext gc)
 	{
 		//TODO
-		throw new UnsupportedOperationException("Not supported yet.");
+		double x1,y1,x2,y2;
+		gc.setGlobalAlpha(1);
+		gc.setFill(Color.WHITE);
+		gc.fillRect(xOffset, yOffset, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+		
+		gc.setStroke(Color.BURLYWOOD);
+		gc.setGlobalAlpha(.2);
+		int n = path.getNoOfWaypoints();
+		Vector v1,v2;
+		for(int i=0;i<n-1;i++)
+		{
+			v1 = path.getWaypoint(i);
+			v2 = path.getWaypoint(i+1);
+			x1 = v1.getX()*1 +xOffset;
+			y1 = v1.getY()*1 +yOffset;
+			x2 = v1.getX()*1 +xOffset;
+			y2 = v1.getY()*1 +yOffset;
+			
+			gc.strokeLine(x1,y1,x2,y2);
+		}
+		gc.setGlobalAlpha(.9);
+		gc.setFill(Color.DARKSLATEGRAY);
+		gc.setStroke(Color.ORANGE);
+		enemies.forEach((t) ->
+		{
+			double x,y,a,b;
+			x = t.getPos().getX() + xOffset - 5;
+			y = t.getPos().getY() + yOffset - 5;
+			gc.fillOval(x, y, 10, 10);
+			a = x + t.getSpeed().getX()/t.getSpeed().getLen() * 10;
+			b = y + t.getSpeed().getY()/t.getSpeed().getLen() * 10;
+			gc.setLineWidth(2);
+			gc.strokeLine(x, y, a, b);
+		});
+		gc.setGlobalAlpha(.9);
+		gc.setFill(Color.LIGHTSEAGREEN);
+		gc.setStroke(Color.LIME);
+		towers.forEach((t) ->
+		{
+			double x,y,r;
+			x = t.getPos().getX() + xOffset - 5;
+			y = t.getPos().getY() + yOffset - 5;
+			gc.fillOval(x, y, 10, 10);
+			r = t.getRange();
+			gc.strokeOval(x+5 - r/2, y+5-r/2, r, r);
+		});
+//		throw new UnsupportedOperationException("Not supported yet.");
+		
 	}
 	
 }

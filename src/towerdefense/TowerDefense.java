@@ -54,7 +54,7 @@ public class TowerDefense extends Application
 		es[1] = new EnClass0(new Vector(0, 0));
 		Tower[] tows = new Tower[1];
 		tows[0] = new towClass0(new Vector(50, 50));
-		GameManger gm = new GameManger();
+		GameManger gm = new GameManger(2e-2);
 		gm.addEnemyAndTower(es, tows);
 		gm.initDEBUG();
 
@@ -67,17 +67,8 @@ public class TowerDefense extends Application
 			{
 				double t = (currentNanoTime - startNanoTime) / 1000000000.0;
 				
-				gm.tick(1e-1);
-				gc.clearRect(0, 0, 400, 400);
-				gc.setFill(Color.BISQUE);
-				gc.fillOval(tows[0].getPos().getX(),tows[0].getPos().getY(), 4, 4);
-				gc.setStroke(Color.GREEN.brighter());
-				gc.strokeOval(0, 0, 100, 100);
-				gc.setFill(Color.DARKSLATEGRAY);
-				gc.fillOval(es[0].getPos().getX() - 4, es[0].getPos().getY() - 4,
-						8, 8);
-				gc.fillOval(es[1].getPos().getX() - 4, es[1].getPos().getY() - 4,
-						8, 8);
+				gm.tick(2e-2);
+				gm.drawOnCanvas(5, 5, 1, gc);
 			}
 		}.start();
 
