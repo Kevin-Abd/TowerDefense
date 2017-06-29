@@ -32,9 +32,6 @@ public class TowerManager
 		this.path = path;
 	}
 
-
-	
-	
 	public void updateEnemiesInSight()
 	{
 		towers.forEach((tow) ->
@@ -47,7 +44,10 @@ public class TowerManager
 					if (tow.pos.getDistTo(en.getPos()) < tow.range)
 					{
 						tow.enemiesInRange.add(en);
-						System.out.printf("[DEBUG]: got enemy in sight %.1f \n",tow.pos.getDistTo(en.getPos()));
+//						System.out.printf("[DEBUG]: got enemy in sight %.1f \n"
+//								+ "\t %s %s\n",
+//								tow.pos.getDistTo(en.getPos()), tow.getPos(),
+//								en.getPos());
 					}
 				});
 				updateTarget(tow);
@@ -75,15 +75,16 @@ public class TowerManager
 			}
 			if (en.getLastWaypoint() == t.target.getLastWaypoint())
 			{
-				if (en.getPos().getDistTo(path.getWaypoint(en.getLastWaypoint()+1))
+				if (en.getPos().getDistTo(path.getWaypoint(
+						en.getLastWaypoint() + 1))
 						< t.target.getPos().getDistTo(path.getWaypoint(
-								en.getLastWaypoint()+1)))
+								en.getLastWaypoint() + 1)))
 					t.target = en;
 			}
 		});
 //		throw new UnsupportedOperationException("Not supported yet.");
 		//TODO
-		
+
 	}
 
 	public void fireAll()
@@ -93,21 +94,26 @@ public class TowerManager
 			if (t.coolDown <= 0 && t.target != null)
 			{
 				System.out.printf("[DEBUG]: firing \n");
-				
+
 				events.add(new GameEvent(t.target, t, EventEnum.SHOTS_FIRED));
+				t.coolDown = t.type.getCoolDown();
 			}
 			else
 			{
-				System.out.printf("[DEBUG]: no good %.1f %s \n",t.coolDown,t.target);
+//				System.out.printf("[DEBUG]: no good CoolDown:%.1f \n",t.coolDown);
+//				System.out.printf("[DEBUG]: no good %.1f %s \n",t.coolDown,t.target);
 			}
 		});
 	}
+
 	public void cooling(double dt)
 	{
 		towers.forEach((t) ->
 		{
-			if( t.coolDown > 0)
-				t.coolDown-=dt;
+			if (t.coolDown > 0)
+				t.coolDown -= dt;
+			else if (t.coolDown < 0)
+				t.coolDown = 0;
 		});
 	}
 }

@@ -9,12 +9,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import towerdefense.Game.Enemy.Enemy;
 import towerdefense.Game.Enemy.EnemyManager;
 import towerdefense.Game.Path.Path;
 import towerdefense.Game.Path.Vector;
 import towerdefense.Game.Tower.Tower;
 import towerdefense.Game.Tower.TowerManager;
+import towerdefense.Game.Tower.TowerTypes;
 
 /**
  *
@@ -36,7 +38,7 @@ public class GameManger
 		this();
 		staticT = dt;
 	}
-	
+
 	public GameManger()
 	{
 		//TEMP 
@@ -49,6 +51,7 @@ public class GameManger
 		events = new LinkedList<>();
 
 	}
+
 	@Deprecated
 	public void initDEBUG()
 	{
@@ -60,13 +63,13 @@ public class GameManger
 		w[3] = new Vector(100, 100);
 		w[4] = new Vector(300, 400);
 		path = new Path(w);
-		
-		
+
 		enemyMang = new EnemyManager(enemies, path, events);
 		towMang = new TowerManager(towers, enemies, events, path);
 	}
+
 	@Deprecated
-	public void addEnemyAndTower(Enemy[] es,Tower[] ts)
+	public void addEnemyAndTower(Enemy[] es, Tower[] ts)
 	{
 		enemies.addAll(Arrays.asList(es));
 		towers.addAll(Arrays.asList(ts));
@@ -147,54 +150,73 @@ public class GameManger
 			GraphicsContext gc)
 	{
 		//TODO
-		double x1,y1,x2,y2;
+		double x1, y1, x2, y2;
 		gc.setGlobalAlpha(1);
 		gc.setFill(Color.WHITE);
-		gc.fillRect(xOffset, yOffset, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-		
+		gc.fillRect(xOffset, yOffset, gc.getCanvas().getWidth(),
+				gc.getCanvas().getHeight());
+
 		gc.setStroke(Color.BURLYWOOD);
-		gc.setGlobalAlpha(.2);
+		gc.setGlobalAlpha(.4);
 		int n = path.getNoOfWaypoints();
-		Vector v1,v2;
-		for(int i=0;i<n-1;i++)
+		Vector v1, v2;
+		for (int i = 0; i < n - 1; i++)
 		{
 			v1 = path.getWaypoint(i);
-			v2 = path.getWaypoint(i+1);
-			x1 = v1.getX()*1 +xOffset;
-			y1 = v1.getY()*1 +yOffset;
-			x2 = v1.getX()*1 +xOffset;
-			y2 = v1.getY()*1 +yOffset;
-			
-			gc.strokeLine(x1,y1,x2,y2);
+			v2 = path.getWaypoint(i + 1);
+			x1 = v1.getX() * 1 + xOffset;
+			y1 = v1.getY() * 1 + yOffset;
+			x2 = v2.getX() * 1 + xOffset;
+			y2 = v2.getY() * 1 + yOffset;
+
+			gc.strokeLine(x1, y1, x2, y2);
 		}
 		gc.setGlobalAlpha(.9);
 		gc.setFill(Color.DARKSLATEGRAY);
 		gc.setStroke(Color.ORANGE);
 		enemies.forEach((t) ->
 		{
-			double x,y,a,b;
-			x = t.getPos().getX() + xOffset - 5;
-			y = t.getPos().getY() + yOffset - 5;
-			gc.fillOval(x, y, 10, 10);
-			a = x + t.getSpeed().getX()/t.getSpeed().getLen() * 10;
-			b = y + t.getSpeed().getY()/t.getSpeed().getLen() * 10;
+			double x, y, a, b,r;
+			r = 5;
+			x = t.getPos().getX() + xOffset;
+			y = t.getPos().getY() + yOffset;
+			gc.fillOval(x -r , y - r, 2*r, 2*r);
+			a = x + t.getSpeed().getX() / t.getSpeed().getLen() * r;
+			b = y + t.getSpeed().getY() / t.getSpeed().getLen() * r;
 			gc.setLineWidth(2);
 			gc.strokeLine(x, y, a, b);
+			
+			r = 5;
+			gc.setStroke(Color.ORANGERED);
+			gc.strokeArc(x-r, y-r, 2*r, 2*r, 0,
+					t.getHitPoint()/ t.getType().getHitPoint() * 360,
+					ArcType.OPEN);
+			
 		});
 		gc.setGlobalAlpha(.9);
 		gc.setFill(Color.LIGHTSEAGREEN);
-		gc.setStroke(Color.LIME);
+
 		towers.forEach((t) ->
 		{
-			double x,y,r;
-			x = t.getPos().getX() + xOffset - 5;
-			y = t.getPos().getY() + yOffset - 5;
-			gc.fillOval(x, y, 10, 10);
+			double x, y, r;
+			x = t.getPos().getX() + xOffset;
+			y = t.getPos().getY() + yOffset;
+			r = 5;
+			gc.fillOval(x - r, y - r, 2 * r, 2 * r);
+
+			r = 5;
+			gc.setStroke(Color.BROWN);
+			gc.strokeArc(x-r, y-r, 2*r, 2*r, 0,
+					t.getCoolDown() / t.getType().getCoolDown() * 360,
+					ArcType.OPEN);
+
 			r = t.getRange();
-			gc.strokeOval(x+5 - r/2, y+5-r/2, r, r);
+			gc.setStroke(Color.LIME);
+			gc.strokeOval(x - r, y - r, r * 2, r * 2);
 		});
+//		gc.strokeOval(0, 0, 400,400);
 //		throw new UnsupportedOperationException("Not supported yet.");
-		
+
 	}
-	
+
 }

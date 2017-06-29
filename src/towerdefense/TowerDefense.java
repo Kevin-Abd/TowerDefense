@@ -49,25 +49,30 @@ public class TowerDefense extends Application
 		stage.setScene(scene);
 		stage.show();
 		//DEBUG
-		Enemy[] es = new Enemy[2];
-		es[0] = new EnClass0(new Vector(50, 0));
-		es[1] = new EnClass0(new Vector(0, 0));
+		Enemy[] es = new Enemy[1];
+		es[0] = new EnClass0(new Vector(20, 20));
+//		es[1] = new EnClass0(new Vector(0, 0));
 		Tower[] tows = new Tower[1];
-		tows[0] = new towClass0(new Vector(50, 50));
+		tows[0] = new towClass0(new Vector(100, 100));
 		GameManger gm = new GameManger(2e-2);
 		gm.addEnemyAndTower(es, tows);
 		gm.initDEBUG();
 
-		final long startNanoTime = System.nanoTime();
+		final long[] startNanoTime = new long[1];
+		startNanoTime[0] = System.nanoTime();
 
 		new AnimationTimer()
 		{
 			@Override
 			public void handle(long currentNanoTime)
 			{
-				double t = (currentNanoTime - startNanoTime) / 1000000000.0;
 				
-				gm.tick(2e-2);
+				double t = (currentNanoTime - startNanoTime[0]) / 1e9;
+				t *= 1e3;
+				startNanoTime[0] = currentNanoTime;
+//				System.out.println("[time] :"+t);
+
+				gm.tick(t);
 				gm.drawOnCanvas(5, 5, 1, gc);
 			}
 		}.start();

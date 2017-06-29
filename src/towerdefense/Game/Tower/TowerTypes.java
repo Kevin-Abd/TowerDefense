@@ -13,10 +13,16 @@ public enum TowerTypes
 {
 	NULL("N/A",0,0,1,0),
 	TEST("test",0,100,1,1),
-	CLASS0("class 0",5,100,2,1);
+	CLASS0("class 0",5,60,1000,10);
 	private final String name;
 	private final int value;
+	/**
+	 * in pixels
+	 */
 	private final double range;
+	/**
+	 * in MilliSeconds
+	 */
 	private final double coolDown;
 	private final double damage;
 	

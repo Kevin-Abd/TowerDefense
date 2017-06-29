@@ -37,6 +37,10 @@ public class EnemyManager
 		});
 	}
 
+	/**
+	 * 
+	 * @param dt by MilliSeconds 
+	 */
 	public void move(double dt)
 	{
 
@@ -44,7 +48,7 @@ public class EnemyManager
 		{
 //			System.out.printf("[DEBUG]: enemy BEFOR:%s \n",t);
 			Vector wayPoint;
-			t.pos.moveBy(t.getSpeed(), dt);
+			t.pos.moveBy(t.getSpeed(), dt/1000);
 			try
 			{
 				wayPoint = path.getWaypoint(t.getLastWaypoint() + 1);
@@ -64,14 +68,17 @@ public class EnemyManager
 	{
 		e.pos = new Vector(-10, -10);
 		enemies.remove(e);
-		events.add(new GameEvent(e, null, EventEnum.ENEMY_KILLED));
+		
 		//TODO
 	}
 
 	public void TakeDamage(double dmg, Enemy e)
 	{
 		if (e.hitPoint - dmg <= 0)
+		{
+			events.add(new GameEvent(e, null, EventEnum.ENEMY_KILLED));
 			kill(e);
+		}
 		else
 			e.hitPoint -= dmg;
 	}

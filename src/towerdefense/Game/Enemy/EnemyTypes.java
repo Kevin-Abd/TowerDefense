@@ -16,9 +16,12 @@ public enum EnemyTypes
 
 	NULL("N/A", 0, Vector.getVectorZero(), 0),
 	TEST("test", 1, Vector.getVectorZero(), 0),
-	CLASS0("class 0", 100, new Vector(20, 0), 10);
+	CLASS0("class 0", 55, new Vector(40, 0), 10);
 	private final String name;
 	private final double hitPoint;
+	/**
+	 * speed is pixels per  <b>SECOND</b>
+	 */
 	private final Vector speed;
 	private final int value;
 
