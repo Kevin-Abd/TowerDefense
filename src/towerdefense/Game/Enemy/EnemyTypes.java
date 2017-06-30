@@ -49,5 +49,8 @@ public enum EnemyTypes
 	{
 		return speed.clone();
 	}
-
+	public int getValue()
+	{
+		return value;
+	}
 }

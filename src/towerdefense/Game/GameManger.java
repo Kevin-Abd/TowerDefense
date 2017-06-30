@@ -7,6 +7,7 @@ package towerdefense.Game;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
@@ -24,7 +25,7 @@ import towerdefense.Game.Tower.TowerTypes;
  */
 public class GameManger
 {
-
+	
 	private EnemyManager enemyMang;
 	private TowerManager towMang;
 	private LinkedList<Enemy> enemies;
@@ -32,26 +33,58 @@ public class GameManger
 	private LinkedList<GameEvent> events;
 	private Path path;
 	private double staticT;
-
+	private int score;
+	private DoubleProperty Money;
+	
 	public GameManger(double dt)
 	{
 		this();
 		staticT = dt;
 	}
-
+	
 	public GameManger()
 	{
 		//TEMP 
 		//TODO read from file
 
-		this.staticT = 1;
-
+		this.staticT = 10;
+		
 		enemies = new LinkedList<>();
 		towers = new LinkedList<>();
 		events = new LinkedList<>();
-
+		score = 0;
 	}
 
+	public DoubleProperty getMoney()
+	{
+		return Money;
+	}
+	
+	public void setPath(Path p)
+	{
+		path = p;
+	}
+	
+	public void addEnemy(Enemy e)
+	{
+		enemies.add(e);
+	}
+	
+	public void addTower(Tower t)
+	{
+		towers.add(t);
+	}
+	
+	public int getScore()
+	{
+		return score;
+	}
+	
+	public void setScore(int s)
+	{
+		score = s;
+	}
+	
 	@Deprecated
 	public void initDEBUG()
 	{
@@ -63,18 +96,18 @@ public class GameManger
 		w[3] = new Vector(100, 100);
 		w[4] = new Vector(300, 400);
 		path = new Path(w);
-
+		
 		enemyMang = new EnemyManager(enemies, path, events);
 		towMang = new TowerManager(towers, enemies, events, path);
 	}
-
+	
 	@Deprecated
 	public void addEnemyAndTower(Enemy[] es, Tower[] ts)
 	{
 		enemies.addAll(Arrays.asList(es));
 		towers.addAll(Arrays.asList(ts));
 	}
-
+	
 	public void tick()
 	{
 		tick(staticT);
@@ -93,10 +126,10 @@ public class GameManger
 		towMang.fireAll();
 		processEvents();
 	}
-
+	
 	public void processEvents()
 	{
-
+		
 		GameEvent ev;
 		while (!events.isEmpty())
 		{
@@ -120,7 +153,7 @@ public class GameManger
 //		throw new UnsupportedOperationException("Not supported yet.");
 
 	}
-
+	
 	private void processFireRange(GameEvent ev)
 	{
 		if (ev.getEvent() != EventEnum.SHOTS_FIRED)
@@ -129,15 +162,17 @@ public class GameManger
 		enemyMang.TakeDamage(ev.getTargetTower().getDamage(),
 				ev.getTargetEnemy());
 	}
-
+	
 	private void processSlaughterHouse(GameEvent ev)
 	{
 		if (ev.getEvent() != EventEnum.ENEMY_KILLED)
 			throw new IllegalStateException(
 					"got:" + ev.getEvent() + ", expected: " + EventEnum.ENEMY_KILLED);
 		System.out.printf("[DEBUG]:enemy killed  \n");
+		score += ev.getTargetEnemy().getType().getValue();
+		Money.add(ev.getTargetEnemy().getType().getValue());
 	}
-
+	
 	private void processBreach(GameEvent ev)
 	{
 		if (ev.getEvent() != EventEnum.BASE_BREACHED)
@@ -145,16 +180,16 @@ public class GameManger
 					"got:" + ev.getEvent() + ", expected: " + EventEnum.BASE_BREACHED);
 		System.out.printf("[DEBUG]: base breached\n");
 	}
-
+	
 	public void drawOnCanvas(double xOffset, double yOffset, double scale,
 			GraphicsContext gc)
 	{
 		//TODO
 		double x1, y1, x2, y2;
 		
-
 		gc.setStroke(Color.BURLYWOOD);
 		gc.setGlobalAlpha(.4);
+		gc.setLineWidth(6);
 		int n = path.getNoOfWaypoints();
 		Vector v1, v2;
 		for (int i = 0; i < n - 1; i++)
@@ -165,55 +200,78 @@ public class GameManger
 			y1 = v1.getY() * 1 + yOffset;
 			x2 = v2.getX() * 1 + xOffset;
 			y2 = v2.getY() * 1 + yOffset;
-
+			
 			gc.strokeLine(x1, y1, x2, y2);
 		}
 		gc.setGlobalAlpha(.9);
 		gc.setFill(Color.DARKSLATEGRAY);
 		gc.setStroke(Color.ORANGE);
-		enemies.forEach((t) ->
+		enemies.forEach((en) ->
 		{
-			double x, y, a, b,r;
-			r = 5;
-			x = t.getPos().getX() + xOffset;
-			y = t.getPos().getY() + yOffset;
-			gc.fillOval(x -r , y - r, 2*r, 2*r);
-			a = x + t.getSpeed().getX() / t.getSpeed().getLen() * r;
-			b = y + t.getSpeed().getY() / t.getSpeed().getLen() * r;
-			gc.setLineWidth(2);
+			double x, y, a, b, r;
+			r = 8;
+			x = en.getPos().getX() + xOffset;
+			y = en.getPos().getY() + yOffset;
+			gc.fillOval(x - r, y - r, 2 * r, 2 * r);
+			a = x + en.getSpeed().getX() / en.getSpeed().getLen() * r;
+			b = y + en.getSpeed().getY() / en.getSpeed().getLen() * r;
+			gc.setLineWidth(1);
 			gc.strokeLine(x, y, a, b);
-			
-			r = 5;
-			gc.setStroke(Color.ORANGERED);
-			gc.strokeArc(x-r, y-r, 2*r, 2*r, 0,
-					t.getHitPoint()/ t.getType().getHitPoint() * 360,
+			gc.setLineWidth(3);
+			r = 7;
+			gc.setStroke(Color.RED);
+			gc.strokeArc(x - r, y - r, 2 * r, 2 * r, 0,
+					en.getHitPoint() / en.getType().getHitPoint() * 360,
 					ArcType.OPEN);
 			
 		});
-		gc.setGlobalAlpha(.9);
-		gc.setFill(Color.LIGHTSEAGREEN);
+//		gc.setGlobalAlpha(.9);
+//		gc.setFill(Color.LIGHTSEAGREEN);
 
 		towers.forEach((t) ->
 		{
-			double x, y, r;
+			
+			double x, y, r, a, b;
 			x = t.getPos().getX() + xOffset;
 			y = t.getPos().getY() + yOffset;
-			r = 5;
+			r = 15;
+			
+			gc.setGlobalAlpha(.9);
+			gc.setFill(Color.LIGHTSEAGREEN);
 			gc.fillOval(x - r, y - r, 2 * r, 2 * r);
-
-			r = 5;
+			
+			r = 14;
 			gc.setStroke(Color.BROWN);
-			gc.strokeArc(x-r, y-r, 2*r, 2*r, 0,
+			gc.strokeArc(x - r, y - r, 2 * r, 2 * r, 0,
 					t.getCoolDown() / t.getType().getCoolDown() * 360,
 					ArcType.OPEN);
-
+			
+//			System.out.printf("[DEBUG]: %.2f \n",t.getRotation().getAngle());
+			a = x + (r ) * (Math.cos(
+					t.getRotation().getAngle() * Math.PI / 180 ));
+			b = y + (r ) * (Math.sin(
+					t.getRotation().getAngle() * Math.PI / 180 ));
+			gc.setLineWidth(3);
+			gc.setGlobalAlpha(.6);
+			gc.setStroke(Color.LIGHTCORAL);
+			gc.strokeLine(x, y, a, b);
+			
+			gc.setGlobalAlpha(.4);
+			gc.setLineWidth(1);
 			r = t.getRange();
 			gc.setStroke(Color.LIME);
 			gc.strokeOval(x - r, y - r, r * 2, r * 2);
+			
 		});
 //		gc.strokeOval(0, 0, 400,400);
 //		throw new UnsupportedOperationException("Not supported yet.");
-
+//		DEBUG
+		{
+			gc.setLineWidth(4);
+			gc.setStroke(Color.FUCHSIA);
+			gc.strokeArc(0, 0, 100, 100, 0, 120, ArcType.OPEN);
+		}
+		//DEBUG END
 	}
-
+	
 }

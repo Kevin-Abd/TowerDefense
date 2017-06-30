@@ -85,7 +85,7 @@ public class EnemyManager
 
 	public boolean isNear(Vector p, Vector v)
 	{
-		return p.getDistTo(v) < 2;
+		return p.getDistTo(v) < 10;
 	}
 
 	private void moveOnFromWaypoint(Enemy e)

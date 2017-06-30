@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.canvas.*?>
 <?import java.lang.*?>
@@ -7,18 +8,26 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Canvas fx:id="FieldCanvas" height="300.0" style="-fx-opacity: .5;" width="650.0" StackPane.alignment="TOP_CENTER">
-         <StackPane.margin>
-            <Insets top="20.0" />
-         </StackPane.margin>
-      </Canvas>
-      <Canvas fx:id="ShopCanvas" height="150.0" width="650.0" StackPane.alignment="BOTTOM_CENTER">
-         <StackPane.margin>
-            <Insets bottom="15.0" />
-         </StackPane.margin>
-      </Canvas>
-   </children>
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" stylesheets="@GameEnv.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Canvas fx:id="FieldCanvas" height="300.0" width="650.0" StackPane.alignment="TOP_CENTER">
+            <StackPane.margin>
+                <Insets top="20.0" />
+            </StackPane.margin>
+        </Canvas>
+        <Canvas fx:id="ShopCanvas" height="150.0" width="650.0" StackPane.alignment="BOTTOM_CENTER">
+            <StackPane.margin>
+                <Insets bottom="15.0" />
+            </StackPane.margin>
+         <effect>
+            <Glow />
+         </effect>
+        </Canvas>      
+    </children>
 </StackPane>

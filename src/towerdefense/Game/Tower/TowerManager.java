@@ -10,6 +10,7 @@ import towerdefense.Game.Enemy.Enemy;
 import towerdefense.Game.EventEnum;
 import towerdefense.Game.GameEvent;
 import towerdefense.Game.Path.Path;
+import towerdefense.Game.Path.Vector;
 
 /**
  *
@@ -82,8 +83,8 @@ public class TowerManager
 					t.target = en;
 			}
 		});
+		updateRotation(t);
 //		throw new UnsupportedOperationException("Not supported yet.");
-		//TODO
 
 	}
 
@@ -115,5 +116,24 @@ public class TowerManager
 			else if (t.coolDown < 0)
 				t.coolDown = 0;
 		});
+	}
+
+	private void updateRotation(Tower t)
+	{
+		if (t.target != null)
+		{
+			Vector v = new Vector(
+					t.target.getPos().getX() - t.pos.getX(),
+					t.target.getPos().getY() - t.pos.getY());
+			double rt = Math.atan((v.getY()) / (v.getX())) * (180 / Math.PI);
+//			System.out.printf("[DEBUG]: Angle before %.1f \n",rt);
+			if (rt < 0)
+				rt += 360;
+			else if (rt > 360)
+				rt -= 360;
+//			System.out.printf("[DEBUG]: Angle after %.1f \n", rt);
+			
+			t.getRotation().setAngle( (v.getX()<0)?(rt+180):(rt) );
+		}
 	}
 }

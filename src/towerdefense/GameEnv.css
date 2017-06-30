@@ -1,0 +1,24 @@
+
+root
+{
+    display: block;
+    /*-fx-cursor: text;*/
+}
+.root
+{
+    
+    /*-fx-background-color: #9999ff;*/
+}
+.stackpane{
+    /*-fx-background-color: antiquewhite,violet;*/
+}
+.cavas
+{
+	
+}
+#FieldCanvas
+{
+}
+#ShopCanvas
+{
+}
