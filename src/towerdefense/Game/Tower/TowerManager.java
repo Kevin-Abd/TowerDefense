@@ -136,4 +136,8 @@ public class TowerManager
 			t.getRotation().setAngle( (v.getX()<0)?(rt+180):(rt) );
 		}
 	}
+	public void addTower(Tower t)
+	{
+		towers.add(t);
+	}
 }

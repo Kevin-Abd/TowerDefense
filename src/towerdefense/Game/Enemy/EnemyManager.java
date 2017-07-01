@@ -159,9 +159,9 @@ public class EnemyManager
 		if (e == null)
 			throw new NullPointerException(
 					"[EXP]:got null Enemy (EnemyManager) ");
-		if (e.lastWaypoint != 0)
-			throw new IllegalArgumentException(
-					"[EXP]: no jumping ahead (EnemyManager)");
+//		if (e.lastWaypoint != 0)
+//			throw new IllegalArgumentException(
+//					"[EXP]: no jumping ahead (EnemyManager)");
 		if (e.hitPoint <= 0)
 			throw new IllegalArgumentException(
 					"[EXP]: no zombies allowed (EnemyManager)");
