@@ -5,6 +5,7 @@
  */
 package towerdefense.Game.Enemy;
 
+import com.google.gson.annotations.Expose;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import towerdefense.Game.Path.Vector;
@@ -13,7 +14,7 @@ import towerdefense.Game.Path.Vector;
  *
  * @author Habedi
  */
-public abstract class Enemy
+public class Enemy
 {
 
 	protected double hitPoint;
@@ -22,6 +23,16 @@ public abstract class Enemy
 	protected int lastWaypoint;
 	protected Vector pos;
 	protected Vector speed;
+
+	public Enemy(EnemyTypes type, Vector pos, int lastWaypoint)
+	{
+		this.type = type;
+		this.pos = pos.clone();
+		this.speed = type.getSpeed();
+		this.hitPoint = type.getHitPoint();
+		this.rotation = new Rotate();
+		this.lastWaypoint = lastWaypoint;
+	}
 
 	public Enemy()
 	{
@@ -74,8 +85,8 @@ public abstract class Enemy
 	@Override
 	public String toString()
 	{
-		return "[Enemy: " + type + " pos:" + pos + " speed:" + speed +
-				" rotation:" + rotation.getAngle()+" lastWP:"+lastWaypoint+"]";
+		return "[Enemy: " + type + " pos:" + pos + " speed:" + speed
+				+ " rotation:" + rotation.getAngle() + " lastWP:" + lastWaypoint + "]";
 	}
 
 }

@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import towerdefense.Game.Enemy.Enemy;
 import towerdefense.Game.Enemy.EnemyManager;
+import towerdefense.Game.Enemy.EnemyTypes;
 import towerdefense.Game.Path.Path;
 import towerdefense.Game.Path.Vector;
 import towerdefense.Game.Tower.Tower;
@@ -23,7 +24,7 @@ import towerdefense.Game.Tower.TowerTypes;
  *
  * @author Habedi
  */
-public class GameManger
+public class FieldManger
 {
 
 	private EnemyManager enemyMang;
@@ -34,30 +35,40 @@ public class GameManger
 	private Path path;
 	private double staticT;
 	private int score;
-	private Double Money;
+	private Integer money;
 
-	public GameManger(double dt)
+	public FieldManger(double dt, Integer m)
 	{
-		this();
+		this(m);
 		staticT = dt;
 	}
 
-	public GameManger()
+	public FieldManger(Integer money)
 	{
 		//TEMP 
 		//TODO read from file
 
 		this.staticT = 10;
-		Money = new Double(0);
 		enemies = new LinkedList<>();
 		towers = new LinkedList<>();
 		events = new LinkedList<>();
 		score = 0;
+		this.money = money;
+
 	}
 
-	public Double getMoney()
+	public void initlize(Path p)
 	{
-		return Money;
+		path = p;
+		if (p == null)
+			throw new NullPointerException("Got null for Path");
+		enemyMang = new EnemyManager(enemies, path, events);
+		towMang = new TowerManager(towers, enemies, events, path);
+	}
+
+	public Integer getMoney()
+	{
+		return money;
 	}
 
 	public void setPath(Path p)
@@ -67,6 +78,7 @@ public class GameManger
 
 	public void addEnemy(Enemy e)
 	{
+		System.out.printf("[DEBUG]: Adding enemy:%s \n", e);
 		enemyMang.addNewEnemy(e);
 //		enemies.add(e);
 	}
@@ -209,68 +221,17 @@ public class GameManger
 		gc.setStroke(Color.ORANGE);
 		enemies.forEach((en) ->
 		{
-			double x, y, a, b, r;
-			r = 8;
-			x = en.getPos().getX() + xOffset;
-			y = en.getPos().getY() + yOffset;
-			gc.fillOval(x - r, y - r, 2 * r, 2 * r);
-			a = x + en.getSpeed().getX() / en.getSpeed().getLen() * r;
-			b = y + en.getSpeed().getY() / en.getSpeed().getLen() * r;
-			gc.setLineWidth(1);
-			gc.strokeLine(x, y, a, b);
-			gc.setLineWidth(3);
-			r = 7;
-			gc.setStroke(Color.RED);
-			gc.strokeArc(x - r, y - r, 2 * r, 2 * r, 0,
-					en.getHitPoint() / en.getType().getHitPoint() * 360,
-					ArcType.OPEN);
-
+			en.getType().draw(gc, en);
 		});
-//		gc.setGlobalAlpha(.9);
-//		gc.setFill(Color.LIGHTSEAGREEN);
 
 		towers.forEach((t) ->
 		{
-
-			double x, y, r, a, b;
-			x = t.getPos().getX() + xOffset;
-			y = t.getPos().getY() + yOffset;
-			r = 15;
-
-			gc.setGlobalAlpha(.9);
-			gc.setFill(Color.LIGHTSEAGREEN);
-			gc.fillOval(x - r, y - r, 2 * r, 2 * r);
-
-			r = 14;
-			gc.setStroke(Color.BROWN);
-			gc.strokeArc(x - r, y - r, 2 * r, 2 * r, 0,
-					t.getCoolDown() / t.getType().getCoolDown() * 360,
-					ArcType.OPEN);
-
-//			System.out.printf("[DEBUG]: %.2f \n",t.getRotation().getAngle());
-			a = x + (r) * (Math.cos(
-					t.getRotation().getAngle() * Math.PI / 180));
-			b = y + (r) * (Math.sin(
-					t.getRotation().getAngle() * Math.PI / 180));
-			gc.setLineWidth(3);
-			gc.setGlobalAlpha(.6);
-			gc.setStroke(Color.LIGHTCORAL);
-			gc.strokeLine(x, y, a, b);
-
-			gc.setGlobalAlpha(.4);
-			gc.setLineWidth(1);
-			r = t.getRange();
-			gc.setStroke(Color.LIME);
-			gc.strokeOval(x - r, y - r, r * 2, r * 2);
-
+			t.getType().draw(gc, t);
 		});
-//		gc.strokeOval(0, 0, 400,400);
-//		throw new UnsupportedOperationException("Not supported yet.");
+
 //		DEBUG
 		{
-			gc.setLineWidth(4);
-			gc.setStroke(Color.FUCHSIA);
-			gc.strokeArc(0, 0, 100, 100, 0, 120, ArcType.OPEN);
+
 		}
 		//DEBUG END
 	}

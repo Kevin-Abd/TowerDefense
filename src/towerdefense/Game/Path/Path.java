@@ -7,6 +7,7 @@ package towerdefense.Game.Path;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -21,10 +22,21 @@ public class Path
 	public Path(Vector[] wps)
 	{
 		wayPoints =new ArrayList<>();
-		wayPoints.addAll(Arrays.asList(wps));
+		for(Vector v:wps)
+			wayPoints.add(v.clone());
 		noOfWaypoints = wps.length;
 	}
-
+	public Path(List wps)
+	{
+		if( !(wps.get(0) instanceof  Vector))
+			throw new IllegalArgumentException("require Vector");
+		else
+		{
+			wayPoints =new ArrayList<>();
+			wayPoints.addAll(wps);
+			noOfWaypoints = wps.size();
+		}
+	}
 	public int getNoOfWaypoints()
 	{
 		return noOfWaypoints;

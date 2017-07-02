@@ -19,19 +19,18 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
-import towerdefense.Game.Enemy.EnClass0;
 import towerdefense.Game.Enemy.Enemy;
 import towerdefense.Game.Enemy.EnemyManager;
-import towerdefense.Game.GameManger;
+import towerdefense.Game.Enemy.EnemyTypes;
+import towerdefense.Game.FieldManger;
+import towerdefense.Game.GameManager;
 import towerdefense.Game.Path.Path;
 import towerdefense.Game.Path.Vector;
+import towerdefense.Game.ShopManager;
 import towerdefense.Game.Tower.Tower;
-import towerdefense.Game.Tower.towClass0;
-import towerdefense.Game.Tower.towClass1;
-import towerdefense.Game.Tower.towClass2;
+import towerdefense.Game.Tower.TowerTypes;
 
 /**
  *
@@ -49,28 +48,22 @@ public class TowerDefense extends Application
 
 		Parent root = FXMLLoader.load(
 				getClass().getResource("Debug.fxml"));
-		((StackPane)root).setBackground(new Background(new BackgroundFill(Color.KHAKI,
+		((StackPane) root).setBackground(new Background(new BackgroundFill(
+				Color.KHAKI,
 				CornerRadii.EMPTY, Insets.EMPTY)));
 		Scene scene = new Scene(root, 700, 500);
 //		System.out.println(root);
 //		System.out.println(root.getChildrenUnmodifiable().get(0));
 		fieldCanvas = (Canvas) root.getChildrenUnmodifiable().get(0);
-		shopCanvas = (Canvas) root.getChildrenUnmodifiable().get(0);
+		shopCanvas = (Canvas) root.getChildrenUnmodifiable().get(1);
 
 		GraphicsContext fieldGC = fieldCanvas.getGraphicsContext2D();
 		GraphicsContext shopGC = shopCanvas.getGraphicsContext2D();
 		stage.setScene(scene);
 		stage.show();
 		//DEBUG
-		Enemy[] es = new Enemy[3];
-		es[0] = new EnClass0(new Vector(20, 20));
-		es[1] = new EnClass0(new Vector(0, 0));
-		es[2] = new EnClass0(new Vector(10, 10));
-		Tower[] tows = new Tower[1];
-		tows[0] = new towClass2(new Vector(150, 80));
-		GameManger gm = new GameManger(2e-2);
-		gm.addEnemyAndTower(es, tows);
-		gm.initDEBUG();
+		GameManager gm= new GameManager(100, fieldCanvas, shopCanvas);
+		gm.readData("1.level");
 
 		final long[] startNanoTime = new long[1];
 		startNanoTime[0] = System.nanoTime();
@@ -81,8 +74,8 @@ public class TowerDefense extends Application
 			public void handle(long currentNanoTime)
 			{
 
-				double t = (currentNanoTime - startNanoTime[0]) / 1e9;
-				t *= 1e3;
+				double dt = (currentNanoTime - startNanoTime[0]) / 1e9;
+				dt *= 1e3;
 				startNanoTime[0] = currentNanoTime;
 //				System.out.println("[time] :"+t);
 				fieldGC.setGlobalAlpha(1);
@@ -90,10 +83,7 @@ public class TowerDefense extends Application
 				fieldGC.setFill(Color.WHITE);
 				fieldGC.fillRect(0, 0, fieldGC.getCanvas().getWidth(),
 						fieldGC.getCanvas().getHeight());
-
-				gm.tick(t);
-//				gm.tick(6);
-				gm.drawOnCanvas(5, 5, 1, fieldGC);
+				gm.tick(dt);
 			}
 		}.start();
 

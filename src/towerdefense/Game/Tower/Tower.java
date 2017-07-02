@@ -5,6 +5,7 @@
  */
 package towerdefense.Game.Tower;
 
+import com.google.gson.annotations.Expose;
 import towerdefense.Game.Enemy.Enemy;
 
 import java.util.LinkedList;
@@ -15,8 +16,9 @@ import towerdefense.Game.Path.Vector;
  *
  * @author Habedi
  */
-public abstract class Tower
+public class Tower
 {
+
 	protected TowerTypes type;
 	protected Vector pos;
 	protected double range;
@@ -29,8 +31,19 @@ public abstract class Tower
 	protected LinkedList<Enemy> enemiesInRange;
 	protected Enemy target;
 
-	
-	public Tower( Vector pos, double range, double coolDown, double dmg)
+	public Tower(TowerTypes type, Vector pos)
+	{
+		this.type = type;
+		this.pos = pos.clone();
+		this.range = type.getRange();
+		this.coolDown = type.getCoolDown();
+		this.damage = type.getDamage();
+		this.rotation = new Rotate();
+		this.enemiesInRange = new LinkedList<>();
+		this.target = null;
+	}
+
+	public Tower(Vector pos, double range, double coolDown, double dmg)
 	{
 		this.pos = pos;
 		this.range = range;
@@ -40,8 +53,8 @@ public abstract class Tower
 		this.target = null;
 		damage = dmg;
 	}
-	
-	public Tower( Vector pos, double range, double coolDown,
+
+	public Tower(Vector pos, double range, double coolDown,
 			Rotate rotation, LinkedList<Enemy> enemiesInRange, Enemy target)
 	{
 		this.pos = pos;
@@ -91,12 +104,10 @@ public abstract class Tower
 	{
 		return target;
 	}
-	
-	
-	
+
 	protected void updateTraget(Enemy t)
 	{
 		target = t;
 	}
-	
+
 }

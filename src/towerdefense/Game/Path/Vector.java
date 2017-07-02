@@ -5,6 +5,8 @@
  */
 package towerdefense.Game.Path;
 
+import com.google.gson.annotations.Expose;
+
 /**
  *
  * @author Habedi
@@ -13,7 +15,7 @@ public class Vector implements Cloneable
 {
 
 	private static final Vector ZERO = new Vector(0, 0);
-	protected double x, y;
+	@Expose() protected double x, y;
 
 	public Vector(double x, double y)
 	{

@@ -18,7 +18,11 @@ root
 }
 #FieldCanvas
 {
+
 }
 #ShopCanvas
 {
+    /*-fx-fill: cornsilk;*/
+    /*-fx-background-color: cornsilk;*/
+    /*-fx-cursor: hand;*/
 }
