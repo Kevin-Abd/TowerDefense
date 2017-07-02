@@ -197,12 +197,17 @@ public class FieldManger
 	public void drawOnCanvas(double xOffset, double yOffset, double scale,
 			GraphicsContext gc)
 	{
+
+		gc.setFill(Color.WHITE);
+		gc.fillRect(0, 0, gc.getCanvas().getWidth(),
+				gc.getCanvas().getHeight());
+
 		//TODO
 		double x1, y1, x2, y2;
 
 		gc.setStroke(Color.BURLYWOOD);
-		gc.setGlobalAlpha(.4);
-		gc.setLineWidth(6);
+		gc.setGlobalAlpha(.35);
+		gc.setLineWidth(10);
 		int n = path.getNoOfWaypoints();
 		Vector v1, v2;
 		for (int i = 0; i < n - 1; i++)
@@ -216,6 +221,17 @@ public class FieldManger
 
 			gc.strokeLine(x1, y1, x2, y2);
 		}
+		/*for(int i=0;i<n;i++)
+		{
+			v1 = path.getWaypoint(i);
+			x1 = v1.getX() + xOffset -10;
+			y1 = v1.getY() + yOffset -10;
+			gc.setStroke(Color.WHITE);
+			gc.fillOval(x1, y1, 20, 20);
+			gc.setStroke(Color.BURLYWOOD);
+			gc.fillOval(x1, y1, 20, 20);
+			
+		}*/
 		gc.setGlobalAlpha(.9);
 		gc.setFill(Color.DARKSLATEGRAY);
 		gc.setStroke(Color.ORANGE);

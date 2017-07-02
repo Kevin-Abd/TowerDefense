@@ -80,9 +80,7 @@ public class TowerDefense extends Application
 //				System.out.println("[time] :"+t);
 				fieldGC.setGlobalAlpha(1);
 
-				fieldGC.setFill(Color.WHITE);
-				fieldGC.fillRect(0, 0, fieldGC.getCanvas().getWidth(),
-						fieldGC.getCanvas().getHeight());
+				
 				gm.tick(dt);
 			}
 		}.start();

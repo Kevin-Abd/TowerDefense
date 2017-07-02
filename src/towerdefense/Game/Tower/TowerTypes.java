@@ -17,11 +17,18 @@ import towerdefense.Game.Enemy.Enemy;
 public enum TowerTypes
 {
 	//		name value range coolDown damge radius
-	NULL("N/A", 0, 0, 1, 0, 0),
-	TEST("test", 0, 100, 500, 1000, 5),
-	CLASS0("basic", 5, 60, 1000, 10, 9),
-	CLASS1("machine gun", 10, 40, 300, 4, 6),
-	CLASS2("sniper", 30, 110, 2000, 40, 16);
+	NULL("N/A", 0, 0, 1, 0, 0, Color.TRANSPARENT, Color.TRANSPARENT,0),
+	TEST("test", 0, 100, 500, 1000, 5, Color.DIMGRAY, Color.BLACK,2),
+	
+	CLASS0("basic", 5, 60, 1000, 10, 9,
+			Color.MIDNIGHTBLUE,
+			Color.MISTYROSE.darker(),2),
+	CLASS1("machine gun", 10, 40, 300, 4, 6,
+			Color.FIREBRICK,
+			Color.CRIMSON.brighter(),1.7),
+	CLASS2("sniper", 30, 110, 2000, 40, 16,
+			Color.DARKOLIVEGREEN,
+			Color.PALEGOLDENROD,3);
 	private final String name;
 	private final int value;
 	/**
@@ -37,14 +44,13 @@ public enum TowerTypes
 	 * in pixels
 	 */
 	private final double radius;
+	private final Color color;
+	private final Color stroke;
+	private final double barrel;
 
-	private TowerTypes(
-			String name,
-			int value,
-			double range,
-			double coolDown,
-			double damage,
-			double radius)
+	private TowerTypes(String name, int value, double range, double coolDown,
+			double damage, double radius, Color color, Color stroke,
+			double barrel)
 	{
 		this.name = name;
 		this.value = value;
@@ -52,6 +58,9 @@ public enum TowerTypes
 		this.coolDown = coolDown;
 		this.damage = damage;
 		this.radius = radius;
+		this.color = color;
+		this.stroke = stroke;
+		this.barrel = barrel;
 	}
 
 	public void draw(GraphicsContext gc, Tower t)
@@ -66,40 +75,9 @@ public enum TowerTypes
 		c = (t.getCoolDown() / t.getType().getCoolDown()) * 360;
 
 		gc.setGlobalAlpha(1);
-
-		switch (this)
-		{
-			case CLASS0:
-			{
-				gc.setFill(Color.MIDNIGHTBLUE);
-				gc.setStroke(Color.MISTYROSE.darker());
-				gc.setLineWidth( 2 );
-			}
-			break;
-			case CLASS1:
-			{
-				gc.setFill(Color.FIREBRICK);
-				gc.setStroke(Color.CRIMSON.brighter());
-				gc.setLineWidth( 2 );
-			}
-			break;
-			case CLASS2:
-			{
-				gc.setFill(Color.DARKOLIVEGREEN);
-				gc.setStroke(Color.PALEGOLDENROD);
-				gc.setLineWidth( 3 );
-			}
-			break;
-			case TEST:
-			{
-				gc.setFill(Color.DIMGRAY);
-				gc.setStroke(Color.BLACK);
-			}
-			break;
-			default:
-				throw new IllegalStateException(
-						"Tower type drawing not supported");
-		}
+		gc.setFill(color);
+		gc.setStroke(stroke);
+		gc.setLineWidth(barrel);
 
 		//Body
 		gc.fillOval(x - radius, y - radius, 2 * radius, 2 * radius);
@@ -119,6 +97,26 @@ public enum TowerTypes
 		gc.setLineWidth(1.3);
 		gc.strokeOval(x - range, y - range, 2 * range, 2 * range);
 
+	}
+
+	public double getRadius()
+	{
+		return radius;
+	}
+
+	public Color getColor()
+	{
+		return color;
+	}
+
+	public Color getStroke()
+	{
+		return stroke;
+	}
+
+	public double getBarrel()
+	{
+		return barrel;
 	}
 
 	public int getValue()
