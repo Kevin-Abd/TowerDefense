@@ -10,6 +10,7 @@ import towerdefense.Game.Enemy.Enemy;
 import towerdefense.Game.EventEnum;
 import towerdefense.Game.GameEvent;
 import towerdefense.Game.Path.Path;
+import towerdefense.Game.Path.Vector;
 
 /**
  *
@@ -32,9 +33,6 @@ public class TowerManager
 		this.path = path;
 	}
 
-
-	
-	
 	public void updateEnemiesInSight()
 	{
 		towers.forEach((tow) ->
@@ -47,7 +45,10 @@ public class TowerManager
 					if (tow.pos.getDistTo(en.getPos()) < tow.range)
 					{
 						tow.enemiesInRange.add(en);
-						System.out.printf("[DEBUG]: got enemy in sight %.1f \n",tow.pos.getDistTo(en.getPos()));
+//						System.out.printf("[DEBUG]: got enemy in sight %.1f \n"
+//								+ "\t %s %s\n",
+//								tow.pos.getDistTo(en.getPos()), tow.getPos(),
+//								en.getPos());
 					}
 				});
 				updateTarget(tow);
@@ -75,15 +76,16 @@ public class TowerManager
 			}
 			if (en.getLastWaypoint() == t.target.getLastWaypoint())
 			{
-				if (en.getPos().getDistTo(path.getWaypoint(en.getLastWaypoint()+1))
+				if (en.getPos().getDistTo(path.getWaypoint(
+						en.getLastWaypoint() + 1))
 						< t.target.getPos().getDistTo(path.getWaypoint(
-								en.getLastWaypoint()+1)))
+								en.getLastWaypoint() + 1)))
 					t.target = en;
 			}
 		});
+		updateRotation(t);
 //		throw new UnsupportedOperationException("Not supported yet.");
-		//TODO
-		
+
 	}
 
 	public void fireAll()
@@ -93,21 +95,49 @@ public class TowerManager
 			if (t.coolDown <= 0 && t.target != null)
 			{
 				System.out.printf("[DEBUG]: firing \n");
-				
+
 				events.add(new GameEvent(t.target, t, EventEnum.SHOTS_FIRED));
+				t.coolDown = t.type.getCoolDown();
 			}
 			else
 			{
-				System.out.printf("[DEBUG]: no good %.1f %s \n",t.coolDown,t.target);
+//				System.out.printf("[DEBUG]: no good CoolDown:%.1f \n",t.coolDown);
+//				System.out.printf("[DEBUG]: no good %.1f %s \n",t.coolDown,t.target);
 			}
 		});
 	}
+
 	public void cooling(double dt)
 	{
 		towers.forEach((t) ->
 		{
-			if( t.coolDown > 0)
-				t.coolDown-=dt;
+			if (t.coolDown > 0)
+				t.coolDown -= dt;
+			else if (t.coolDown < 0)
+				t.coolDown = 0;
 		});
+	}
+
+	private void updateRotation(Tower t)
+	{
+		if (t.target != null)
+		{
+			Vector v = new Vector(
+					t.target.getPos().getX() - t.pos.getX(),
+					t.target.getPos().getY() - t.pos.getY());
+			double rt = Math.atan((v.getY()) / (v.getX())) * (180 / Math.PI);
+//			System.out.printf("[DEBUG]: Angle before %.1f \n",rt);
+			if (rt < 0)
+				rt += 360;
+			else if (rt > 360)
+				rt -= 360;
+//			System.out.printf("[DEBUG]: Angle after %.1f \n", rt);
+			
+			t.getRotation().setAngle( (v.getX()<0)?(rt+180):(rt) );
+		}
+	}
+	public void addTower(Tower t)
+	{
+		towers.add(t);
 	}
 }

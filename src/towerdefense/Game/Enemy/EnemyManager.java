@@ -30,13 +30,17 @@ public class EnemyManager
 		this.enemies = enemies;
 		this.path = path;
 		this.events = events;
-		System.out.printf("[DEBUG]: intilizing EnemyManager with %s \n",path);
+		System.out.printf("[DEBUG]: intilizing EnemyManager with %s \n", path);
 		this.enemies.forEach((t) ->
 		{
 			this.updateSpeedAndRotaion(t);
 		});
 	}
 
+	/**
+	 *
+	 * @param dt by MilliSeconds
+	 */
 	public void move(double dt)
 	{
 
@@ -44,7 +48,7 @@ public class EnemyManager
 		{
 //			System.out.printf("[DEBUG]: enemy BEFOR:%s \n",t);
 			Vector wayPoint;
-			t.pos.moveBy(t.getSpeed(), dt);
+			t.pos.moveBy(t.getSpeed(), dt / 1000);
 			try
 			{
 				wayPoint = path.getWaypoint(t.getLastWaypoint() + 1);
@@ -53,8 +57,8 @@ public class EnemyManager
 			}
 			catch (Exception e)
 			{
-				System.err.println("Enemy: "+t+"\nalredy at last WP!");
-				
+				System.err.println("Enemy: " + t + "\nalredy at last WP!:\n"+e);
+
 			}
 //			System.out.printf("[DEBUG]: enemy AFTER:%s \n",t);
 		});
@@ -64,21 +68,24 @@ public class EnemyManager
 	{
 		e.pos = new Vector(-10, -10);
 		enemies.remove(e);
-		events.add(new GameEvent(e, null, EventEnum.ENEMY_KILLED));
+
 		//TODO
 	}
 
 	public void TakeDamage(double dmg, Enemy e)
 	{
 		if (e.hitPoint - dmg <= 0)
+		{
+			events.add(new GameEvent(e, null, EventEnum.ENEMY_KILLED));
 			kill(e);
+		}
 		else
 			e.hitPoint -= dmg;
 	}
 
 	public boolean isNear(Vector p, Vector v)
 	{
-		return p.getDistTo(v) < 2;
+		return p.getDistTo(v) < 10;
 	}
 
 	private void moveOnFromWaypoint(Enemy e)
@@ -110,7 +117,7 @@ public class EnemyManager
 			System.out.println("[debug]new base breach");
 			events.add(new GameEvent(en, null, EventEnum.BASE_BREACHED));
 			this.kill(en);
-			
+
 		}
 		catch (Exception ex)
 		{
@@ -124,13 +131,19 @@ public class EnemyManager
 			Rotate rt)
 	{
 		Vector v = new Vector(to.getX() - from.getX(), to.getY() - from.getY());
-		rt.setAngle(Math.atan(v.getY() / v.getX()) * (180 / Math.PI));
+		double r = (Math.atan(v.getY() / v.getX()) * (180 / Math.PI) + 180);
+
+		if (r < 0)
+			r += 360;
+		else if (r > 360)
+			r -= 360;
+//			System.out.printf("[DEBUG]: Angle after %.1f \n", rt);
+
+		rt.setAngle((v.getX() < 0) ? (r) : (r + 180));
 
 		double s = sp.getLen();
 		sp.setX(v.getX() / v.getLen() * s);
 		sp.setY(v.getY() / v.getLen() * s);
-//		System.err.printf("[DEBUG]: got dV %s with angel: %.2f \n"+
-//				"\tand result speed %s\n",v,rt.getAngle(),sp);
 	}
 
 	public void updateSpeedAndRotaion(Enemy e)
@@ -152,9 +165,9 @@ public class EnemyManager
 		if (e == null)
 			throw new NullPointerException(
 					"[EXP]:got null Enemy (EnemyManager) ");
-		if (e.lastWaypoint != 0)
-			throw new IllegalArgumentException(
-					"[EXP]: no jumping ahead (EnemyManager)");
+//		if (e.lastWaypoint != 0)
+//			throw new IllegalArgumentException(
+//					"[EXP]: no jumping ahead (EnemyManager)");
 		if (e.hitPoint <= 0)
 			throw new IllegalArgumentException(
 					"[EXP]: no zombies allowed (EnemyManager)");

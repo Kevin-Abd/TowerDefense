@@ -18,13 +18,11 @@ import javafx.scene.canvas.Canvas;
 public class Debug implements Initializable
 {
 	@FXML
-	Canvas can;
+	Canvas FieldCanvas;
+	@FXML
+	Canvas ShopCanvas;
 
 	
-	public Canvas getCan()
-	{
-		return can;
-	}
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
