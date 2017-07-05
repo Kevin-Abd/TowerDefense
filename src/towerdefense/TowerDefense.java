@@ -7,6 +7,7 @@ package towerdefense;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -14,6 +15,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -61,9 +63,8 @@ public class TowerDefense extends Application
 		GraphicsContext shopGC = shopCanvas.getGraphicsContext2D();
 		stage.setScene(scene);
 		stage.show();
-		//DEBUG
-		GameManager gm= new GameManager(100, fieldCanvas, shopCanvas);
-		gm.readData("1.level");
+		GameManager gm = new GameManager(fieldCanvas, shopCanvas);
+		gm.readData("3.level");
 
 		final long[] startNanoTime = new long[1];
 		startNanoTime[0] = System.nanoTime();
@@ -77,14 +78,41 @@ public class TowerDefense extends Application
 				double dt = (currentNanoTime - startNanoTime[0]) / 1e9;
 				dt *= 1e3;
 				startNanoTime[0] = currentNanoTime;
-//				System.out.println("[time] :"+t);
-				fieldGC.setGlobalAlpha(1);
 
-				
 				gm.tick(dt);
 			}
 		}.start();
 
+		scene.setOnKeyPressed((event) ->
+		{
+//			System.out.printf("[DEBUG]: got key %s \n", event);
+			switch (event.getCode())
+			{
+
+				case DIGIT1:
+					gm.setShopSelection(TowerTypes.CLASS0);
+					break;
+
+				case DIGIT2:
+					gm.setShopSelection(TowerTypes.CLASS1);
+					break;
+				case DIGIT3:
+					gm.setShopSelection(TowerTypes.CLASS2);
+					break;
+				default:
+
+					break;
+			}
+		});
+		fieldCanvas.setOnMouseClicked((event) ->
+		{
+			if (gm.buy(new Vector(event.getX(), event.getY())) != 0)
+			{
+				System.out.printf("[DEBUG]: err in buying \n");
+			}
+		});
+//		shopCanvas.setOnKeyPressed(fieldCanvas.getOnKeyPressed());
+//		root.setOnKeyPressed(fieldCanvas.getOnKeyPressed());
 		//DEBUG END
 	}
 

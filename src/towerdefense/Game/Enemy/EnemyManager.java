@@ -57,7 +57,7 @@ public class EnemyManager
 			}
 			catch (Exception e)
 			{
-				System.err.println("Enemy: " + t + "\nalredy at last WP!");
+				System.err.println("Enemy: " + t + "\nalredy at last WP!:\n"+e);
 
 			}
 //			System.out.printf("[DEBUG]: enemy AFTER:%s \n",t);

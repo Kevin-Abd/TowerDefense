@@ -35,26 +35,25 @@ public class FieldManger
 	private Path path;
 	private double staticT;
 	private int score;
-	private Integer money;
+	private IntNumber money;
 
-	public FieldManger(double dt, Integer m)
+	public FieldManger(double dt, IntNumber m)
 	{
 		this(m);
 		staticT = dt;
 	}
 
-	public FieldManger(Integer money)
+	public FieldManger(IntNumber money)
 	{
 		//TEMP 
 		//TODO read from file
-
 		this.staticT = 10;
 		enemies = new LinkedList<>();
 		towers = new LinkedList<>();
 		events = new LinkedList<>();
 		score = 0;
 		this.money = money;
-
+//		System.out.printf("[DEBUG]: field money %d vs %d \n",this.money,money);
 	}
 
 	public void initlize(Path p)
@@ -66,7 +65,7 @@ public class FieldManger
 		towMang = new TowerManager(towers, enemies, events, path);
 	}
 
-	public Integer getMoney()
+	public IntNumber getMoney()
 	{
 		return money;
 	}
@@ -78,7 +77,7 @@ public class FieldManger
 
 	public void addEnemy(Enemy e)
 	{
-		System.out.printf("[DEBUG]: Adding enemy:%s \n", e);
+//		System.out.printf("[`]: Adding enemy:%s \n", e);
 		enemyMang.addNewEnemy(e);
 //		enemies.add(e);
 	}
@@ -184,6 +183,7 @@ public class FieldManger
 					"got:" + ev.getEvent() + ", expected: " + EventEnum.ENEMY_KILLED);
 		System.out.printf("[DEBUG]:enemy killed  \n");
 		score += ev.getTargetEnemy().getType().getValue();
+		money.add(ev.getTargetEnemy().getType().getValue());
 	}
 
 	private void processBreach(GameEvent ev)

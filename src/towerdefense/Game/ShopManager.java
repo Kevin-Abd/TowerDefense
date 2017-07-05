@@ -21,10 +21,10 @@ public class ShopManager
 {
 	
 	private TowerTypes selected;
-	private Integer money;
+	private IntNumber money;
 	private boolean needsUpdate;
 	
-	public ShopManager(Integer money)
+	public ShopManager(IntNumber money)
 	{
 		this.money = money;
 		needsUpdate = true;
@@ -33,11 +33,13 @@ public class ShopManager
 	
 	public void drawOnCanvas(GraphicsContext gc)
 	{
-		if (!needsUpdate)
-			return;
+//		if (!needsUpdate)	return;
 		gc.setGlobalAlpha(1);
 		gc.setFill(Color.SNOW);
 		gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+		
+		gc.setFill(Color.BLACK);
+		gc.fillText("Money: "+money.getValue(), 0, 10);
 		
 		double x, y, r, dx;
 		y = 75;
@@ -107,10 +109,16 @@ public class ShopManager
 		//TODO
 		if (selected == null)
 			return 2;
-		if (selected.getValue() > money)
+		else if (selected.getValue() > money.getValue())
 			return 1;
+		else
+		{
+			money.add(-selected.getValue());
+			needsUpdate = true;
+			return 0;
+		}
 		
-		return -1;
+//		return -1;
 	}
 	
 }
